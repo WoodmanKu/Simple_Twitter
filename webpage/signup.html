@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign Up Page</title>
+    <style>
+      body {
+        background-color: #15202B;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
+      }
+      h1 {
+        font-size: 36px;
+        margin-top: 50px;
+        text-align: center;
+      }
+      form {
+        margin-top: 30px;
+        text-align: center;
+      }
+      label {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="email"] {
+        border-radius: 25px;
+        border: none;
+        box-sizing: border-box;
+        font-size: 18px;
+        padding: 10px;
+        width: 300px;
+      }
+      input[type="submit"] {
+        background-color: #1DA1F2;
+        border-radius: 25px;
+        border: none;
+        color: #FFFFFF;
+        cursor: pointer;
+        font-size: 18px;
+        margin-top: 20px;
+        padding: 10px 20px;
+        text-transform: uppercase;
+      }
+      input[type="submit"]:hover {
+        background-color: #0E8BBB;
+      }
+      .login-container {
+        margin-top: 20px;
+        text-align: center;
+      }
+      .login-container p {
+        display: inline-block;
+        font-size: 16px;
+        margin: 0;
+      }
+      .login-container a {
+        color: #1DA1F2;
+        text-decoration: none;
+      }
+      .login-container a:hover {
+        text-decoration: underline;
+      }
+      .error-message {
+        color: #FF0000;
+        font-size: 14px;
+        margin-top: 5px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Create Your Account</h1>
+    <form>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username"><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email"><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+      <input type="submit" value="Sign Up">
+    </form>
+    <p></p>
+    <div class="login-container">
+      <p>Already have an account? <a href="login.html">Log in</a></p>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('form').on('submit', function(event) {
+          event.preventDefault();
+          var username = $('#username').val();
+          var email = $('#email').val();
+          var password = $('#password').val();
+          if (username == '' || email == '' || password == '') {
+            $('.error-message').html('Please fill in all fields');
+            return;
+          }
+          if (!isValidEmail(email)) {
+            $('.error-message').html('Please enter a valid email address');
+            return;
+          }
+          $.ajax({
+            url: 'signup.php',
+            type: 'POST',
+            data: {
+              'username': username,
+              'email': email,
+              'password': password
+            },
+            success: function(response) {
+              $('form').hide();
+              $('p').html('Thank you for signing up! We have sent you an email with instructions on how to verify your email address.');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              $('.error-message').html('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+          });
+        });
+        
+        function isValidEmail(email) {
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        }
+        
+      });
+    </script>
+    <div class="error-message"></div>
+  </body>
+</html>

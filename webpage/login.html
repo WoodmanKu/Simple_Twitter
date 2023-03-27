@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        body {
+            background-color: #15202B;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+        }
+        .login-container {
+            margin-top: 100px;
+            text-align: center;
+        }
+        .login-form {
+            display: inline-block;
+            text-align: left;
+            background-color: #FFFFFF;
+            border: 1px solid #CCCCCC;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-input {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #CCCCCC;
+            border-radius: 3px;
+            width: 100%;
+        }
+        .form-submit {
+            display: block;
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            background-color: #1DA1F2;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-submit:hover {
+            background-color: #0E8BB3;
+        }
+        .form-submit:focus {
+            outline: none;
+        }
+        .form-submit:active {
+            background-color: #0C7DA0;
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-submit:disabled {
+            background-color: #CCCCCC;
+            cursor: not-allowed;
+        }
+        .form-submit:disabled:hover {
+            background-color: #CCCCCC;
+        }
+        .form-submit-icon {
+            display: inline-block;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+            width: 20px;
+        }
+        .form-submit-label {
+            display: inline-block;
+            font-weight: bold;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-count {
+            display: inline-block;
+            font-size: 12px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-divider {
+            display: inline-block;
+            border-left: 1px solid #CCCCCC;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-twitter {
+            background-color: #1DA1F2;
+        }
+        .form-submit-twitter:hover {
+            background-color: #0E8BB3;
+        }
+        .form-submit-twitter:active {
+            background-color: #0C7DA0;
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-submit-twitter-icon {
+            background-image: url("https://abs.twimg.com/icons/apple-touch-icon-192x192.png");
+            background-size: contain;
+            margin-right: 0;
+        }
+        .form-submit-twitter-label {
+            margin-right: 0;
+        }
+        .form-submit-twitter-count {
+            display: none;
+        }
+        .form-submit-twitter-divider {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <form class="login-form" id="login-form">
+            <img src="https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png" alt="Twitter Logo" width="50px" height="50px">
+            <h1>Log in to Twitter</h1>
+            <input type="text" class="form-input" placeholder="Phone, email, or username" required>
+            <input type="password" class="form-input" placeholder="Password" required>
+            <button type="submit" class="form-submit form-submit-twitter">
+                <span class="form-submit-icon form-submit-twitter-icon"></span>
+                <span class="form-submit-label form-submit-twitter-label">Log in</span>
+                <span class="form-submit-count form-submit-twitter-count"></span>
+                <span class="form-submit-divider form-submit-twitter-divider"></span>
+            </button>
+            <a href="#">Forgot password?</a>
+            <a href="signup.html">Sign up for Twitter</a>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // prevent the form from submitting normally
+            window.location.href = "main.html"; // redirect to the main page
+        });
+    </script>
+</body>
+</html>
