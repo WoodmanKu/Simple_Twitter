@@ -2,7 +2,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css-style/login.css">
+<link rel="stylesheet" type="text/css" href="css/login.css">
 <html>
 <head>
     <title>Login</title>
@@ -14,25 +14,32 @@
             <img id="word" src='/img/Slogan.svg' alt="word">
         </div>
         <div class="login-container">
-            <form class="login-form" id="login-form">
+            <form class="login-form" action="/login" method="post">
                 <a>Username</a>
-                <input type="text" class="form-input" placeholder="Phone, email, or username" required>
+                <input type="text" id="username" name="username" class="form-input" placeholder="Phone, email, or username" required>
                 <a>Password</a>
-                <input type="password" class="form-input" placeholder="Password" required>
+                <input type="password" id="password" name="password" class="form-input" placeholder="Password" required>
+                <div id="error-message"></div>
                 <button type="submit" id="login">
                     <span>Log in</span>
                 </button>
                 <a href="#" id="option">Forgot password?</a>
-                <a href="signup.html" id="option">Sign up for Twitter</a>
+                <a href="signup" id="option">Sign up for Twitter</a>
             </form>
         </div>
     </div>
 
     <script>
-        document.getElementById("login-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // prevent the form from submitting normally
-            window.location.href = "main.html"; // redirect to the main page
-        });
+        // check if there is an error message in the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+
+        // if there is an error message, display it on the page
+        if (error) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Incorrect Username/Password' + '</p>';
+        }
     </script>
+
 </body>
 </html>

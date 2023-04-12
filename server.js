@@ -22,11 +22,7 @@ app.use(session({
   cookie: { secure: false } // Allow cookie transmission over non-HTTPS connections
 }));
 
-app.use(express.static('public', {
-  setHeaders: function(res, path) {
-    res.setHeader('Content-Type', mime.getType(path));
-  }
-}));
+app.use(express.static(__dirname + '/public')); //Serves resources from public folder
 
 app.use(express.static(__dirname + '/views'));
 
@@ -513,6 +509,37 @@ app.post('/retweet', async (req, res) => {
     console.log("Retweet successful");
   } catch (err) {
     console.error('Error retweeting post:', err);
+    res.status(500).send(err.message);
+  }
+});
+app.post('/follow', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      res.redirect('/login');
+      return;
+    }
+
+    const db = client.db('Test');
+    const userCollection = db.collection('User');
+    const currentUsername = req.session.user.username;
+    const usernameToFollow = req.body.username;
+
+    // Add the user being followed to the current user's following list
+    await userCollection.updateOne(
+      { username: currentUsername },
+      { $addToSet: { following: usernameToFollow } }
+    );
+
+    // Add the current user to the user being followed's followers list
+    await userCollection.updateOne(
+      { username: usernameToFollow },
+      { $addToSet: { followers: currentUsername } }
+    );
+
+    res.redirect('/main');
+    console.log("suc")
+  } catch (err) {
+    console.error('Error following user:', err);
     res.status(500).send(err.message);
   }
 });
