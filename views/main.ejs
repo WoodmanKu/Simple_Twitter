@@ -166,19 +166,43 @@
             <h3><%= post.title %></h3>
             <p><%= post.username %></p>
             <p><%= post.content %></p>
-            <p>Post: <%= post._id %></p> <!-- test id -->
             <% if (post.image) { %>
               <% const base64Data = post.image.toString('base64'); %>
               <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
             <% } %><br>
-            <p>Like Count: <%= post.likecount %></p>
-            <button class="like-button" action="/like/<%= post._id %>" data-like-dislike="like">Like</button>
-            <button class="dislike-button" action="/dislike/<%= post._id %>" data-like-dislike="dislike">Dislike</button>
+            <p>Like Count: <%= post.likeCount %></p>
+            <div class="interaction-buttons">
+              <form method="POST" action="/like/<%= post._id %>">
+                <button type="submit">Like</button>
+              </form>
+              <form method="POST" action="/dislike/<%= post._id %>">
+                <button type="submit">Dislike</button>
+              </form>
+            </div>
+            
+            <div class="comments">
+              <h4>Comments:</h4>
+              <% if (post.comments && post.comments.length > 0) { %>
+                <% for (const comment of post.comments) { %>
+                  <div class="comment">
+                    <p><%= comment.username %>: <%= comment.content %></p>
+                  </div>
+                <% } %>
+              <% } else { %>
+                <p>No comments yet.</p>
+              <% } %>
+            </div>
             
             <form class="comment-form" action="/comment/<%= post._id %>" method="POST">
               <input type="text" name="comment" placeholder="Add a comment">
               <button type="submit">Submit</button>
             </form>
+
+            <form method="POST" action="/retweet">
+              <input type="hidden" name="postId" value="<%= post._id %>">
+              <button type="submit">Retweet</button>
+            </form>
+          </form>
           </div>
         <% } %>
       </div>
@@ -198,17 +222,23 @@
     <ul>
       <% users.forEach(function(user) { %>
         <li>
-          <%= user.username %>
-          <% if (currentUser && currentUser._id && user._id && currentUser._id.toString() !== user._id.toString()) { %>
-            <% if (currentUser.following && currentUser.following.includes(user._id)) { %>
-              <button disabled>Following</button>
-            <% } else { %>
-              <form method="POST" action="/follow">
-                <input type="hidden" name="userId" value="<%= user._id %>">
+          <p><%= user.username %></p>
+          
+          <form method="POST" action="/follow">
+            <input type="hidden" name="username" value="<%= user.username %>">
+            <% if (currentUser.username !== user.username) { %>
+              <% if (currentUser.following?.includes(user.username)) { %>
+                <button disabled>Following</button>
+              <% } else { %>
                 <button type="submit">Follow</button>
-              </form>
+              <% } %>
             <% } %>
-          <% } %>
+          </form>
+
+
+
+
+
         </li>
       <% }); %>
     </ul>

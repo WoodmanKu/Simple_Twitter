@@ -30,10 +30,6 @@ app.use(express.static('public', {
 
 app.use(express.static(__dirname + '/views'));
 
-
-
-
-// 连接到 MongoDB 数据库
   const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect().then(() => {
       console.log("Connected successfully to MongoDB server");
@@ -41,13 +37,10 @@ app.use(express.static(__dirname + '/views'));
       console.log("Error:", err.stack);
   });
 
-// 使用 body-parser 中间件
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.set('view engine', 'ejs');
 
-
-// 处理 GET 请求
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/page/login.html');
 });
@@ -66,32 +59,43 @@ app.get('/login', (req, res) => {
 
 app.get('/main', async (req, res) => {
   try {
-    const currentUser = req.session.user;
-
-    if (!currentUser) {
-      res.redirect('/login');
+    if (!req.session.user) { // Check if the user is not logged in
+      res.redirect('/login'); // Redirect to the login page if the user is not logged in
       return;
     }
 
     const db = client.db('Test');
     const userCollection = db.collection('User');
     const postCollection = db.collection('Post');
+    const commentCollection = db.collection('Comments');
 
-    let followingIds = [];
+    const currentUser = await userCollection.findOne({ username: req.session.user.username });
+    console.log(currentUser)
 
-    if (currentUser.following) {
-      followingIds = currentUser.following.map((id) => new ObjectId(id));
-    }
+    const followingUsernames = currentUser.following || [];
 
-    const postQuery = {
-      $or: [
-        { user: currentUser._id },
-        { user: { $in: followingIds } }
-      ]
-    };
-    const posts = await postCollection.find(postQuery)
-      .sort({ createdAt: -1 })
-      .toArray();
+    // Add the current user's username to the list of usernames
+
+    const postQuery = [
+      {
+        $match: {
+          username: { $in: [...followingUsernames, currentUser.username] }
+        }
+      },
+      {
+        $lookup: {
+          from: 'Comments',
+          localField: '_id',
+          foreignField: 'postId',
+          as: 'comments'
+        }
+      },
+      {
+        $sort: { createdAt: -1 }
+      }
+    ];
+    
+    const posts = await postCollection.aggregate(postQuery).toArray();
 
     const query = req.query.q;
     let users = [];
@@ -156,7 +160,6 @@ app.get('/create', (req, res) => {
   res.sendFile(__dirname + '/page/create.html');
 });
 
-// 处理 POST 请求 signup
 app.post('/signup',
   body('username').notEmpty().withMessage('Username is required'),
   body('password').notEmpty().withMessage('Password is required'),
@@ -179,7 +182,10 @@ app.post('/signup',
         password,
         isAdmin: false,
         status: true,
-        following: []
+        followers: [],
+        following: [],
+        posts: [],
+        repost: []
       };
       const result = await collection.insertOne(user);
       console.log(result);
@@ -191,7 +197,6 @@ app.post('/signup',
   }
 );
 
-// 处理 POST 请求 login
 app.post('/login', async (req, res) => {
   try {
     const db = client.db('Test');
@@ -231,9 +236,12 @@ app.post('/create', upload.single('photo'),
 
       const db = client.db('Test');
       const postCollection = db.collection('Post');
+      const userCollection = db.collection('User');
       const { title, body } = req.body;
 
-      if (!req.session.user || !req.session.user.username) {
+      const currentUser = req.session.user;
+
+      if (!currentUser || !currentUser.username) {
         return res.status(401).json({ error: 'User not found' });
       }
 
@@ -243,7 +251,8 @@ app.post('/create', upload.single('photo'),
         createdAt: new Date(),
         likecount: 0,
         userLike: 0,
-        username: req.session.user.username
+        type: true,
+        username: currentUser.username
       };
 
       if (req.file) {
@@ -256,6 +265,15 @@ app.post('/create', upload.single('photo'),
 
       const result = await postCollection.insertOne(post);
       console.log(result);
+
+      const postId = result.insertedId;
+      console.log(currentUser._id )
+      console.log(postId)
+
+      await userCollection.updateOne(
+        { username: currentUser.username },
+        { $push: { posts: postId } }
+      );
 
       res.redirect('/create?action=create_success');
     } catch (err) {
@@ -323,12 +341,18 @@ app.post('/edit-profile', function(req, res) {
 app.post('/like/:postId', async (req, res) => {
   console.log("like")
   try {
+    const postId = new ObjectId(req.params.postId);
+    const userId = req.session.user.username;
+    console.log(userId)
+    // Create a new MongoClient
+    const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    // Connect to the MongoDB server
+    await client.connect();
+
+    // Select the database and collection
     const db = client.db('Test');
     const postCollection = db.collection('Post');
-
-    const postId = new ObjectId(req.params.postId);
-    const userId = req.session.user._id;
-    const choice = req.body['like-dislike']; // Get the user's choice from the request body
 
     // Find the post by ID
     const post = await postCollection.findOne({ _id: postId });
@@ -336,18 +360,27 @@ app.post('/like/:postId', async (req, res) => {
     // Get the likes object for the current post, or create a new one if it doesn't exist
     const likes = post.likes || {};
 
-    // Toggle the user's choice between like and dislike
+    // Check if the user has already liked or disliked the post
     if (likes[userId] === 1) {
-      likes[userId] = 0; // Remove the like from the likes object
+      throw new Error("User has already liked this post");
+    } else if (likes[userId] === -1) {
+      // User has disliked the post, so toggle their choice to like
+      likes[userId] = 1;
+      post.userLike = 1;
     } else {
-      likes[userId] = 1; // Add the like to the likes object
+      // User hasn't liked or disliked the post, so add their choice to the likes object
+      likes[userId] = 1;
+      post.userLike = 1;
     }
 
     // Update the post document with the new likes object and counts
     const updatedPost = await postCollection.updateOne(
       { _id: postId },
-      { $set: { likes: likes }, $inc: { likeCount: likes[userId] === 1 ? 1 : -1 } }
+      { $set: { likes: likes, userLike: post.userLike }, $inc: { likeCount: likes[userId] === 1 ? 1 : likes[userId] === -1 ? -1 : 0 } }
     );
+
+    // Close the client connection
+    await client.close();
 
     res.redirect('/main');
   } catch (err) {
@@ -359,12 +392,18 @@ app.post('/like/:postId', async (req, res) => {
 app.post('/dislike/:postId', async (req, res) => {
   console.log("dislike")
   try {
+    const postId = new ObjectId(req.params.postId);
+    const userId = req.session.user.username;
+
+    // Create a new MongoClient
+    const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    // Connect to the MongoDB server
+    await client.connect();
+
+    // Select the database and collection
     const db = client.db('Test');
     const postCollection = db.collection('Post');
-
-    const postId = new ObjectId(req.params.postId);
-    const userId = req.session.user._id;
-    const choice = req.body['like-dislike']; // Get the user's choice from the request body
 
     // Find the post by ID
     const post = await postCollection.findOne({ _id: postId });
@@ -372,18 +411,27 @@ app.post('/dislike/:postId', async (req, res) => {
     // Get the likes object for the current post, or create a new one if it doesn't exist
     const likes = post.likes || {};
 
-    // Toggle the user's choice between like and dislike
+    // Check if the user has already liked or disliked the post
     if (likes[userId] === -1) {
-      likes[userId] = 0; // Remove the dislike from the likes object
+      throw new Error("User has already disliked this post");
+    } else if (likes[userId] === 1) {
+      // User has liked the post, so toggle their choice to dislike
+      likes[userId] = -1;
+      post.userLike = -1;
     } else {
-      likes[userId] = -1; // Add the dislike to the likes object
+      // User hasn't liked or disliked the post, so add their choice to the likes object
+      likes[userId] = -1;
+      post.userLike = -1;
     }
 
     // Update the post document with the new likes object and counts
     const updatedPost = await postCollection.updateOne(
       { _id: postId },
-      { $set: { likes: likes }, $inc: { likeCount: likes[userId] === 1 ? 1 : -1 } }
+      { $set: { likes: likes, userLike: post.userLike }, $inc: { likeCount: likes[userId] === -1 ? -1 : likes[userId] === 1 ? 1 : 0 } }
     );
+
+    // Close the client connection
+    await client.close();
 
     res.redirect('/main');
   } catch (err) {
@@ -396,21 +444,22 @@ app.post('/comment/:postId', async (req, res) => {
   try {
     const db = client.db('Test');
     const postCollection = db.collection('Post');
+    const commentCollection = db.collection('Comments'); // Add a new collection for comments
     const user = req.session.user;
     const postId = new ObjectId(req.params.postId);
     const { comment } = req.body;
     const newComment = {
-      comment,
-      createdAt: new Date(),
       username: user.username,
+      content: comment,
+      postId: postId,
+      createdAt: new Date(),
     };
-    const result = await postCollection.insertOne(newComment);
+    const result = await commentCollection.insertOne(newComment); // Save the comment to the Comments collection
     await postCollection.updateOne(
       { _id: postId },
-      { $push: { comments: result.insertedId } }
+      { $set: { type: false }, $push: { comments: result.insertedId } } // Use $set operator to update type field and $push operator to add comment ID to comments array
     );
-    console.log('success')
-    res.redirect('/main');
+    res.redirect('/main'); // Redirect to the main page after leaving a comment
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal server error');
@@ -428,7 +477,7 @@ app.get('/search', async (req, res) => {
   }
 });
 
-app.post('/follow', async (req, res) => {
+app.post('/retweet', async (req, res) => {
   try {
     if (!req.session.user) {
       res.redirect('/login');
@@ -436,24 +485,38 @@ app.post('/follow', async (req, res) => {
     }
 
     const db = client.db('Test');
-    const userCollection = db.collection('User');
-    const currentUserId = req.session.user._id;
-    const userIdToFollow = req.body.userId;
+    const postCollection = db.collection('Post');
+    const userCollection = db.collection('User'); // Initialize userCollection variable
+    const currentUsername = req.session.user.username;
+    const postId = req.body.postId;
 
-    // Add the user ID to the current user's following array
+    // Find the original post being retweeted
+    const originalPost = await postCollection.findOne({ _id: new ObjectId(postId) });
+
+    // Create a new post with the retweet content and reference to the original post
+    const retweet = {
+      content: `RT @${originalPost.author}: ${originalPost.content}`,
+      author: currentUsername,
+      originalPostId: postId
+    };
+
+    // Insert the new retweet post into the database
+    const result = await postCollection.insertOne(retweet);
+
+    // Add the new post to the user's timeline
     await userCollection.updateOne(
-      { _id: currentUserId },
-      { $addToSet: { following: ObjectId(userIdToFollow) } }
+      { username: currentUsername },
+      { $addToSet: { timeline: result.insertedId } }
     );
 
     res.redirect('/main');
+    console.log("Retweet successful");
   } catch (err) {
-    console.error('Error following user:', err);
+    console.error('Error retweeting post:', err);
     res.status(500).send(err.message);
   }
 });
 
-// 关闭 MongoDB 数据库连接
 process.on('SIGINT', () => {
   client.close().then(() => {
     console.log("Closed MongoDB client connection");
@@ -464,7 +527,6 @@ process.on('SIGINT', () => {
   });
 });
 
-// 启动服务器
 app.listen(port, () => {
   console.log("Server-connect...");
 });
