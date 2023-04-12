@@ -1,7 +1,6 @@
 const showCommentBtns = document.querySelectorAll('.show-comment-btn');
 const choice = button.dataset.likeDislike;
 
-
 showCommentBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
     const commentBox = btn.parentElement.querySelector('.comment-form');

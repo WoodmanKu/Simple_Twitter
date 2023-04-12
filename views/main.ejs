@@ -1,5 +1,8 @@
 
 <!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <html>
   <head>
@@ -7,23 +10,22 @@
 
   </head>
   <body>
-
+    <div class="layer">
     <div class="main-page">
       <!-- First part: function list -->
       
       <div class="function-list">
-        <h1>Welcome, <%= currentUser.username %>!</h1>
-        <h2>Function List</h2>
+        <img src="/img/Twitter-icon.svg">
+        <h2>Welcome <%= currentUser.username %>!</h2>
         <ul>
-          <li><a href="create">Create a new post</a></li>
-          <li><a href="profile">Edit profile</a></li>
+          <li><a href="create">new Post</a></li>
+          <li><a href="profile">Profile</a></li>
           <li><a href="logout">Log out</a></li>
         </ul>
       </div>
 
       <!-- Second part: user posts -->
       <div class="posts">
-        <h2>Posts</h2>
         <% for (const post of posts) { %>
           <div class="post">
             <h3><%= post.title %></h3>
@@ -33,14 +35,24 @@
               <% const base64Data = post.image.toString('base64'); %>
               <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
             <% } %><br>
-            <p>Like Count: <%= post.likeCount %></p>
             <div class="interaction-buttons">
-              <form method="POST" action="/like/<%= post._id %>">
-                <button type="submit">Like</button>
-              </form>
-              <form method="POST" action="/dislike/<%= post._id %>">
-                <button type="submit">Dislike</button>
-              </form>
+              <span><%= post.likeCount %></span>
+              <div class="like">
+                <form method="POST" action="/like/<%= post._id %>">
+                  <button type="submit"><img src="/img/heart.svg"></button>
+                </form>
+              </div>
+              <div class="dislike">
+                <form method="POST" action="/dislike/<%= post._id %>">
+                  <button type="submit"><img src="/img/heartbreak.svg"></button>
+                </form>
+              </div>
+              <div class="reply">
+                  <button onclick="showDiv()"><img src="/img/chat-square-text.svg"></button>
+              </div>
+              <div class="retweet">
+                <button onclick="showDiv()"><img src="/img/send.svg"></button>
+            </div>
             </div>
             
             <div class="comments">
@@ -56,7 +68,7 @@
               <% } %>
             </div>
             
-            <form class="comment-form" action="/comment/<%= post._id %>" method="POST">
+            <form id="comment-form" style="display:none;" action="/comment/<%= post._id %>" method="POST">
               <input type="text" name="comment" placeholder="Add a comment">
               <button type="submit">Submit</button>
             </form>
@@ -75,13 +87,13 @@
 
 <!-- Third part: search users -->
 <div class="search-users">
-  <h2>Search Users</h2>
   <form method="GET" action="/main">
     <input type="text" placeholder="Search..." name="q">
     <button type="submit">Go</button>
   </form>
   <% if (users && users.length > 0) { %>
-    <h2>Search Results:</h2>
+    <h3>Search Results:</h3>
+    <div class="result">
     <ul>
       <% users.forEach(function(user) { %>
         <li>
@@ -97,11 +109,6 @@
               <% } %>
             <% } %>
           </form>
-
-
-
-
-
         </li>
       <% }); %>
     </ul>
@@ -109,9 +116,16 @@
     <p>No users found.</p>
   <% } %>
 </div>
+</div>
       
 
 
     </div>
+  </div>
   </body>
+  <script>
+    function showDiv() {
+      document.getElementById('comment-form').style.display = "block";
+    }
+  </script>
 </html>
