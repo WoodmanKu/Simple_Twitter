@@ -1,87 +1,42 @@
-
-
 <!DOCTYPE html>
 <html>
   <head>
     <title>Main Page</title>
     <style>
-
       body {
-            background-image: url('./page/bg.jpg');
-            background-color: #1DA1F2;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-      /* Flex container styles */
-      .main-page {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: stretch;
+        background-color: #15202B;
+        color: #FFFFFF;
+        font-family: Arial, sans-serif;
       }
-      /* First part styles */
-      .function-list {
-        flex-basis: 20%;
-        display: inline-block;
-        width: 50%;
-        margin-bottom: 20px;
-        color: white;
-        font-size: 20px;
-        background-color: transparent;
+      h1 {
+        font-size: 36px;
+        margin-top: 50px;
+        text-align: center;
       }
-      /* Second part styles */
-      .user-posts {
-        flex-basis: 50%;
-        display: inline-block;
-        width: 50%;
-        margin-bottom: 20px;
-        color: white;
-        font-size: 20px;
-        background-color: transparent;
+      p {
+        font-size: 24px;
+        margin-top: 30px;
+        text-align: center;
       }
-      /* Third part styles */
-      .search-users {
-        flex-basis: 30%;
-        display: inline-block;
-        width: 50%;
-        margin-bottom: 20px;
-        color: white;
-        font-size: 20px;
-        background-color: transparent;
+      .logout-container {
+        text-align: center;
+        margin-top: 30px;
       }
-
+      .logout-container a {
+        color: #1DA1F2;
+        text-decoration: none;
+        font-size: 18px;
+      }
+      .logout-container a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
-
-    <div class="main-page">
-      <!-- First part: function list -->
-      <div class="function-list">
-        <h2>Function List</h2>
-        <ul>
-          <li><a href="create">Create a new post</a></li>
-          <li><a href="profile">Edit profile</a></li>
-          <li><a href="logout">Log out</a></li>
-        </ul>
-      </div>
-
-      <!-- Second part: user posts -->
-      <div class="user-posts">
-        <h2>User Posts</h2>
-        <p>Post content goes here</p>
-      </div>
-
-
-      <!-- Third part: search users -->
-      <div class="search-users">
-        <h2>Search Users</h2>
-        <form>
-          <input type="text" placeholder="Search...">
-          <button type="submit">Go</button>
-        </form>
-      </div>
-
-
+    <h1>Welcome to the Main Page</h1>
+    <p>Thank you for logging in!</p>
+    <div class="logout-container">
+      <p>Don't forget to <a href="logout.html">log out</a> when you're done.</p>
     </div>
   </body>
 </html>

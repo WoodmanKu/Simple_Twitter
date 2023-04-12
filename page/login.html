@@ -1,120 +1,38 @@
 <!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css-style/login.css">
 <html>
 <head>
     <title>Login</title>
-    <style>
-        body {
-            background-image: url('./page/bg.jpg');
-            background-color: #1DA1F2;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-        .login-form {
-            position: fixed;
-            top: 50%;
-            right: 10%;
-            transform: translateY(-50%);
-            display: inline-block;
-            width: 400px;
-            height:500px;
-            max-width: 80%;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            background-color: transparent;
-            text-align: center;
-            border-radius: 30px;
-        }
-
-        .login-form label {
-            display: inline-block;
-            width: 50%;
-            text-align: center;
-            margin-bottom: 20px;
-            color: white;
-            font-size: 20px;
-        }
-
-        .login-form label a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .login-form label a:hover {
-            text-decoration: underline;
-        }
-
-        .signup-form h1 {
-            color: white;
-            text-decoration: none;
-            font-size: 25px;
-        }
-
-        .login-form input {
-            display: inline-block;
-            width: 60%;
-            margin-bottom: 10px;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 30px;
-            padding: 15px;
-            color: white;
-            background-color: transparent;
-        }
-
-        .login-form button {
-            display: inline-block;
-            background-color: transparent;
-            color: #fff;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 30px;
-            padding: 5px 15px;
-            cursor: pointer;
-        }
-
-
-    </style>
-
-
-
-
-
 </head>
 <body>
-    <form class="login-form" action="/login" method="post">
-        <br>
-
-        <label for="login"><h2>Login</h2></label>
-
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" placeholder="Enter Your Username" required><br><br>
-        
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" placeholder="Enter Your Password" required><br><br>
-        
-        <div id="error-message"></div>
-
-        <button type="submit">Login</button><br><br>
-
-        <label for="Forgetpassword"><a href="#">Forget Password ?</a></label><br>
-        <label for="Signup"><a href="signup">Don't have an account ?</a></label><br>
-        
-    </form>
+    <div class="login-divider">
+        <div class="word-design">
+            <img id="icon" src='/img/Twitter-Icon-big.svg' alt="icon">
+            <img id="word" src='/img/Slogan.svg' alt="word">
+        </div>
+        <div class="login-container">
+            <form class="login-form" id="login-form">
+                <a>Username</a>
+                <input type="text" class="form-input" placeholder="Phone, email, or username" required>
+                <a>Password</a>
+                <input type="password" class="form-input" placeholder="Password" required>
+                <button type="submit" id="login">
+                    <span>Log in</span>
+                </button>
+                <a href="#" id="option">Forgot password?</a>
+                <a href="signup.html" id="option">Sign up for Twitter</a>
+            </form>
+        </div>
+    </div>
 
     <script>
-        // check if there is an error message in the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const error = urlParams.get('error');
-
-        // if there is an error message, display it on the page
-        if (error) {
-            const errorMessage = document.getElementById('error-message');
-            errorMessage.innerHTML = '<p style="color: red;">' + 'Incorrect Username/Password' + '</p>';
-        }
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // prevent the form from submitting normally
+            window.location.href = "main.html"; // redirect to the main page
+        });
     </script>
-
 </body>
 </html>

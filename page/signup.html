@@ -1,116 +1,73 @@
 <!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css-style/signup.css">
 <html>
-<head>
-    <title>Login</title>
-    <style>
-        body {
-            background-image: url('./page/bg.jpg');
-            background-color: #1DA1F2;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-        .signup-form {
-            position: fixed;
-            top: 50%;
-            right: 10%;
-            transform: translateY(-50%);
-            display: inline-block;
-            width: 400px;
-            height:550px;
-            max-width: 80%;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            padding: 20px;
-            background-color: transparent;
-            text-align: center;
-            border-radius: 30px;
-        }
-
-        .signup-form label {
-            display: inline-block;
-            width: 30%;
-            text-align: center;
-            margin-bottom: 10px;
-            color: white;
-            font-size: 20px;
-        }
-
-        .signup-form label a {
-            color: white;
-            text-decoration: none;
-            font-size: 18px;
-        }
-
-        .signup-form label a:hover {
-            text-decoration: underline;
-        }
-
-        .signup-form h1 {
-            color: white;
-            text-decoration: none;
-            font-size: 25px;
-        }
-
-        .signup-form input {
-            display: inline-block;
-            width: 60%;
-            margin-bottom: 10px;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 30px;
-            padding: 15px;
-            color: white;
-            background-color: transparent;
-        }
-
-        .signup-form button {
-            display: inline-block;
-            background-color: transparent;
-            color: #fff;
-            border: 2px solid white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 30px;
-            padding: 5px 15px;
-            cursor: pointer;
-        }
-
-    </style>
-
-
-
-
-
-</head>
-<body>
-    <form class="signup-form" action="/signup" method="POST">
-      <h1>Create Your Account !</h1><br>
-
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username" placeholder="Enter Your Username" required><br><br>
-        
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" placeholder="Enter Your Password" required><br><br>
-
-        <label for="r_password">Password:</label><br>
-        <input type="password" id="comfirm-password" name="comfirm-password" placeholder="Re-enter Your Password" required><br><br>
-        
-        <div id="error-message"></div>
-        <button type="submit" value="signup">Sign up</button><br><br>
-
-        <label for="HaveAc"><a href="login">Already have an account?</a></label><br>
-
-        <script>
-            // check if there is an error message in the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const error = urlParams.get('error');
-    
-            // if there is an error message, display it on the page
-            if (error) {
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.innerHTML = '<p style="color: red;">' + 'Username already exists!' + '</p>';
-            }
-        </script>
-    
+  <head>
+    <title>Sign Up Page</title>
+  </head>
+  <body>
+    <div class="signup-divider">
+      <div class="word-design">
+        <img id="icon" src='/img/Twitter-Icon-big.svg' alt="icon">
+        <img id="word" src='/img/Slogan.svg' alt="word">
+      </div>
+      <h1>Create Your Account</h1>
+      <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Sign Up">
       </form>
-</body>
+      <div class="login-container">
+        <p>Already have an account? <a href="login.html">Log in</a></p>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('form').on('submit', function(event) {
+          event.preventDefault();
+          var username = $('#username').val();
+          var email = $('#email').val();
+          var password = $('#password').val();
+          if (username == '' || email == '' || password == '') {
+            $('.error-message').html('Please fill in all fields');
+            return;
+          }
+          if (!isValidEmail(email)) {
+            $('.error-message').html('Please enter a valid email address');
+            return;
+          }
+          $.ajax({
+            url: 'signup.php',
+            type: 'POST',
+            data: {
+              'username': username,
+              'email': email,
+              'password': password
+            },
+            success: function(response) {
+              $('form').hide();
+              $('p').html('Thank you for signing up! We have sent you an email with instructions on how to verify your email address.');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              $('.error-message').html('Error: ' + textStatus + ' - ' + errorThrown);
+            }
+          });
+        });
+        
+        function isValidEmail(email) {
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          return emailRegex.test(email);
+        }
+        
+      });
+    </script>
+    <div class="error-message"></div>
+  </body>
+</html>
