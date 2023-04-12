@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Page header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.header a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+input[type="text"], textarea {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+button[type="submit"] {
+  padding: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #444;
+}
+
+/* Error messages */
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
+    </style>
+
+<title>Create Post</title>
+</head>
+<body>
+  <h1>Create Post</h1>
+  <form action="/create" method="post" enctype="multipart/form-data">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    <br>
+    <label for="body">Body:</label>
+    <textarea id="body" name="body" required></textarea>
+    <br>
+    <label for="photo">Photo:</label>
+    <input type="file" id="photo" name="photo">
+    <br>
+    <button type="submit">Create Post</button>
+  </form>
+
+  <div id="message"></div>
+
+  <!-- Always show the "Go back to main page" link -->
+  <div>
+    <a href="/main">Go back to main page</a>
+  </div>
+
+  <script>
+    // Check if there is an error message in the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
+
+    // If there is a success message, display it on the page
+    if (action === 'create_success') {
+      const messageElement = document.getElementById('message');
+      const message = '<p style="color: green;">Create success!</p>';
+      messageElement.innerHTML = message;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Main Page</title>
+    <style>
+
+      body {
+            background-image: url('./page/bg.jpg');
+            background-color: #1DA1F2;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+      /* Flex container styles */
+      .main-page {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: stretch;
+      }
+      /* First part styles */
+      .function-list {
+        flex-basis: 20%;
+        display: inline-block;
+        width: 50%;
+        margin-bottom: 20px;
+        color: white;
+        font-size: 20px;
+        background-color: transparent;
+      }
+      /* Second part styles */
+      .user-posts {
+        flex-basis: 50%;
+        display: inline-block;
+        width: 50%;
+        margin-bottom: 20px;
+        color: white;
+        font-size: 20px;
+        background-color: transparent;
+      }
+      /* Third part styles */
+      .search-users {
+        flex-basis: 30%;
+        display: inline-block;
+        width: 50%;
+        margin-bottom: 20px;
+        color: white;
+        font-size: 20px;
+        background-color: transparent;
+      }
+
+    </style>
+  </head>
+  <body>
+
+    <div class="main-page">
+      <!-- First part: function list -->
+      <div class="function-list">
+        <h2>Function List</h2>
+        <ul>
+          <li><a href="create">Create a new post</a></li>
+          <li><a href="profile">Edit profile</a></li>
+          <li><a href="logout">Log out</a></li>
+        </ul>
+      </div>
+
+      <!-- Second part: user posts -->
+      <div class="user-posts">
+        <h2>User Posts</h2>
+        <p>Post content goes here</p>
+      </div>
+
+
+      <!-- Third part: search users -->
+      <div class="search-users">
+        <h2>Search Users</h2>
+        <form>
+          <input type="text" placeholder="Search...">
+          <button type="submit">Go</button>
+        </form>
+      </div>
+
+
+    </div>
+  </body>
+</html>

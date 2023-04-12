@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <style>
+      body {
+  background-color: #1DA1F2;
+}
+
+/* Center the content of the page vertically and horizontally */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Style the table */
+table {
+  width: 100%;
+  max-width: 600px;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  color: #000;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #eee;
+}
+
+/* Style the delete button */
+.delete-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #cc0000;
+}
+
+/* Style the log out button */
+.logout-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.logout-btn {
+  color: #fff;
+  text-decoration: none;
+  padding: 5px 10px;
+  background-color: #1DA1F2;
+  border-radius: 5px;
+}
+
+.logout-btn:hover {
+  opacity: 0.8;
+}
+    </style>
+    <title>Admin Page</title>
+    <link rel="stylesheet" href="admin.css">
+    <script src="/admin.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Admin Page</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Is Admin</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(user) { %>
+            <tr>
+              <td><%= user.username %></td>
+              <td><%= user.password %></td>
+              <td><%= user.isAdmin ? 'Yes' : 'No' %></td>
+              <td><%= user.status ? 'Active' : 'Inactive' %></td>
+              <td>
+                <button id="delete-btn-<%= user.username %>" class="delete-btn" onclick="deleteUser('<%= user.username %>')">Delete</button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <div class="logout-container">
+        <a href="/logout" class="logout-btn">Log Out</a>
+      </div>
+    </div>
+  </body>
+</html>
