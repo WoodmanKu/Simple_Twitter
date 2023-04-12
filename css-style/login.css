@@ -1,0 +1,126 @@
+
+        body {
+            margin: 0;
+            background-image: url('/img/background.jpeg'); 
+            width: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+        .login-divider{
+            gap:5vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .word-design {
+            display: flex;
+            row-gap:15vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        #word{
+            height: 45vh;
+        }
+        #icon{
+            height: 20vh;
+        }
+        .login-container {
+            display: flex;
+            align-items: center;
+            
+        }
+        .login-form {
+            min-height:450px;
+            display: inline-block;
+            text-align: center;
+            border: 2px solid #FFFFFF;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-input {
+            display: block;
+            background-color: transparent;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #CCCCCC;
+            border-radius: 15px;
+            width: 80%;
+        }
+        .form-submit {
+            display: block;
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            border: 2px solid #FFFFFF;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 90%;
+        }
+        .form-submit:hover {
+        }
+        .form-submit:focus {
+            outline: none;
+        }
+        .form-submit:active {
+
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-submit:disabled {
+            background-color: #CCCCCC;
+            cursor: not-allowed;
+        }
+        .form-submit:disabled:hover {
+            background-color: #CCCCCC;
+        }
+        .form-submit-icon {
+            display: inline-block;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+            width: 20px;
+        }
+        .form-submit-label {
+            display: inline-block;
+            font-weight: bold;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-count {
+            display: inline-block;
+            font-size: 12px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-divider {
+            display: inline-block;
+            border-left: 1px solid #CCCCCC;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .form-submit-twitter {
+        }
+        .form-submit-twitter:hover {
+        }
+        .form-submit-twitter:active {
+            box-shadow: 0px 0px 5px #CCCCCC;
+        }
+        .form-submit-twitter-icon {
+            background-image: url("https://abs.twimg.com/icons/apple-touch-icon-192x192.png");
+            background-size: contain;
+            margin-right: 0;
+        }
+        .form-submit-twitter-label {
+            margin-right: 0;
+        }
+        .form-submit-twitter-count {
+            display: none;
+        }
+        .form-submit-twitter-divider {
+            display: none;
+        }
