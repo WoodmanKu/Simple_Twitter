@@ -19,10 +19,10 @@
       <form>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email">
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
+        <label for="r_password">Re-enter Password:</label>
+        <input type="password" id="cpassword" name="cpassword">
         <input type="submit" value="Sign Up">
       </form>
       <div class="login-container">
@@ -31,46 +31,19 @@
     </div>
     </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      $(document).ready(function() {
-        $('form').on('submit', function(event) {
-          event.preventDefault();
-          var username = $('#username').val();
-          var email = $('#email').val();
-          var password = $('#password').val();
-          if (username == '' || email == '' || password == '') {
-            $('.error-message').html('Please fill in all fields');
-            return;
-          }
-          if (!isValidEmail(email)) {
-            $('.error-message').html('Please enter a valid email address');
-            return;
-          }
-          $.ajax({
-            url: 'signup.php',
-            type: 'POST',
-            data: {
-              'username': username,
-              'email': email,
-              'password': password
-            },
-            success: function(response) {
-              $('form').hide();
-              $('p').html('Thank you for signing up! We have sent you an email with instructions on how to verify your email address.');
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-              $('.error-message').html('Error: ' + textStatus + ' - ' + errorThrown);
+       // check if there is an error message in the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get('error');
+
+            // if there is an error message, display it on the page
+            if (error == 1) {
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.innerHTML = '<p style="color: red;">' + 'Username already exists!' + '</p>';
+            }else if (error == 2){
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.innerHTML = '<p style="color: red;">' + 'Password dont match!' + '</p>';
             }
-          });
-        });
-        
-        function isValidEmail(email) {
-          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          return emailRegex.test(email);
-        }
-        
-      });
     </script>
     <div class="error-message"></div>
   </body>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/foruser.css">
 <html>
 <head>
   <title>For User</title>
-  <style>
-    img {
-  max-width: 400px;
-  max-height: 400px;
-}
-  </style>
 </head>
 <body>
+  <div class="discover-container">
   <h1>Top 10 Most Liked Posts</h1>
+
   <% if (posts.length === 0) { %>
     <p>No posts found.</p>
   <% } else { %>
@@ -42,5 +42,6 @@
       <% } %>
     </ul>
   <% } %>
+</div>
 </body>
 </html>
