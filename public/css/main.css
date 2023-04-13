@@ -64,9 +64,9 @@ body {
       }
       .navi-item{
         width: fit-content;
-        padding: 5px;
+        padding: 10px;
         padding-left: 10px;
-        padding-right: 10px;
+        padding-right: 30px;
         border-radius: 10px;
         color:#cdcdcd;
         display: flex;

@@ -32,15 +32,16 @@
           </li>
           <li>
             <div class="navi-item">
-              <img src="/img/box-arrow-left.svg">
-              <a href="logout">Log out</a>
+              <img src="/img/search-heart.svg">
+              <a href="ForUser">Discover</a>
             </div>
           </li>
           <li>
             <div class="navi-item">
               <img src="/img/box-arrow-left.svg">
-              <a href="ForUser">Discover</a></li>
+              <a href="logout">Log out</a>
             </div>
+          </li>
         </ul>
       </div>
 
@@ -55,8 +56,8 @@
               <% const base64Data = post.image.toString('base64'); %>
               <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
             <% } %><br>
+            <p>Like Count: <%= post.likeCount %></p>
             <div class="interaction-buttons">
-              <span><%= post.likeCount %></span>
               <div class="like">
                 <form method="POST" action="/like/<%= post._id %>">
                   <button type="submit"><img src="/img/heart.svg"></button>
@@ -71,8 +72,11 @@
                   <button onclick="showDiv()"><img src="/img/chat-square-text.svg"></button>
               </div>
               <div class="retweet">
-                <button onclick="showDiv()"><img src="/img/send.svg"></button>
-            </div>
+                <form method="POST" action="/retweet">
+                  <input type="hidden" name="postId" value="<%= post._id %>">
+                  <button type="submit"><img src="/img/send.svg"></button>
+                </form>
+              </div>
             </div>
             
             <div class="comments">
@@ -92,11 +96,6 @@
               <input type="text" name="comment" placeholder="Add a comment">
               <button type="submit">Submit</button>
             </form>
-
-            <form method="POST" action="/retweet">
-              <input type="hidden" name="postId" value="<%= post._id %>">
-              <button type="submit">Retweet</button>
-            </form>
           </div>
       
           <!-- Display the reposted posts -->
@@ -113,11 +112,20 @@
                 <p>Like Count: <%= repost.likeCount %></p>
                 <div class="interaction-buttons">
                   <form method="POST" action="/like/<%= repost._id %>">
-                    <button type="submit">Like</button>
+                    <button type="submit"><img src="/img/heart.svg"></button>
                   </form>
                   <form method="POST" action="/dislike/<%= repost._id %>">
-                    <button type="submit">Dislike</button>
+                    <button type="submit"><img src="/img/heartbreak.svg"></button>
                   </form>
+                  <div class="reply">
+                    <button onclick="showDiv()"><img src="/img/chat-square-text.svg"></button>
+                  </div>
+                  <div class="retweet">
+                    <form method="POST" action="/retweet">
+                      <input type="hidden" name="postId" value="<%= repost._id %>">
+                      <button type="submit"><img src="/img/send.svg"></button>
+                    </form>
+                  </div>
                 </div>
       
                 <div class="comments">
@@ -133,15 +141,11 @@
                   <% } %>
                 </div>
       
-                <form class="comment-form" action="/comment/<%= repost._id %>" method="POST">
+                <form id="comment-form" style="display:none;" action="/comment/<%= post._id %>" method="POST">
                   <input type="text" name="comment" placeholder="Add a comment">
                   <button type="submit">Submit</button>
                 </form>
       
-                <form method="POST" action="/retweet">
-                  <input type="hidden" name="postId" value="<%= repost._id %>">
-                  <button type="submit">Retweet</button>
-          </form>
           </div>
           <% } %>
         <% } %>

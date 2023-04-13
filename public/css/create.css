@@ -108,12 +108,12 @@ button[type="submit"]:hover, button[type="submit"]:focus{
     
 }
 #message a{
-    font-size: 10px;
+    font-size: 15px;
     text-decoration: none;
     color:#cdcdcd;
 }
 #message a:hover{
-    font-size: 15px;
+    font-size: 18px;
     transition: 0.25s;
     text-shadow: rgb(0, 0, 0) 1px 0 10px;
     color:#cdcdcd;
