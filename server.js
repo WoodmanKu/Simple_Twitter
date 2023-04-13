@@ -719,15 +719,17 @@ app.post('/follow', async (req, res) => {
 
 app.post('/delete/:id', async (req, res) => {
   const id = req.params.id;
+  const db = client.db('Test');
+  const postCollection = db.collection('Post');
   try {
-    const post = await Post.findById(id);
+    const post = await postCollection.findOne({ _id: new ObjectId(id) });
     if (!post) {
       return res.status(404).send('Post not found');
     }
-    await post.remove();
+    await postCollection.deleteOne({ _id: new ObjectId(id) });
     res.redirect('/');
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     res.status(500).send('Server error');
   }
 });

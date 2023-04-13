@@ -27,7 +27,7 @@ body {
     font-size: 20px;
     font-style: normal;
     
-    color: #d4d4d4;
+    color: #e0e0e0;
 }
 .layer{
     background-color: rgba(0, 0, 0, 0.5);
@@ -68,13 +68,13 @@ body {
         padding-left: 10px;
         padding-right: 30px;
         border-radius: 10px;
-        color:#cdcdcd;
+        color:#e1e1e1;
         display: flex;
         gap:8px;
         align-items: center;
       }
       .navi-item:hover{
-        background-color:#00000050;
+        background-color:rgb(0, 0, 0,0.5);
         transition: 0.5s;
       }
       /* Second part styles */
@@ -158,8 +158,13 @@ body {
         display: flex;
         margin-left: auto;
         padding:10px;
-        border:1px solid #a0a0a0;
+        border:1.5px solid #a0a0a0;
         border-radius: 20px;
+      }
+      #search-bar:has(input:focus){
+        border:1.5px solid #60f9f9;
+        box-shadow: -4px 4px 4px #000000;
+        transition: 0.1s;
       }
       #search-bar div{
         width:100%;
@@ -167,26 +172,46 @@ body {
       }
       #search-bar input{
         all:unset;
-        text-align: center;
+        text-align: left;
+        color:#ffffff;
+        font-size: 15px;
       }
       #search-bar input::placeholder{
         font-size: 15px;
       }
       .search-users form button{
         all:unset;
+        padding: 5px;
         font-size: 15px;
         cursor: pointer;
+        border-radius: 20px;
+      }
+      .search-users form button:hover{
+        border:1.5px solid #60f9f9;
+        box-shadow: -4px 4px 4px #000000;
+        color:#60f9f9;
+        transition: 0.1s;
       }
       .search-users li{
         list-style-type: none;
         width: 150px;
         margin-left: auto;
       }
+      .search-users h3{
+        margin-right: 10px;
+      }
 
     .result{
-        max-height: 90vh;
+        background-color: rgb(0, 0, 0,0.5);
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        border-radius: 20px;
+        padding-right: 10px;
+        max-height: 80vh;
         overflow: scroll;
         overflow-x: hidden;
+        margin-right: 10px;
       }
 
       .result::-webkit-scrollbar {
@@ -195,4 +220,36 @@ body {
       img {
         max-width: 400px;
         max-height: 400px;
+    }
+    .result p{
+      font-size: 15px;
+      color:white;
+    }
+    #comment-form input{
+      all:unset;
+      font-size: 10px;
+    }
+    #comment-form input:focus{
+      padding-left:10px;
+      padding-top:10px;
+      padding-bottom:10px;
+      border: 1.5px solid #ffffff;
+      border-radius: 20px;
+      color:#ffffff;
+    }
+    #comment-form button{
+      all:unset;
+      font-size: 10px;
+      cursor: pointer;
+      padding:5px;
+      color:#cdcdcd;
+      cursor: pointer;
+      border-radius: 20px;
+      border: 1.5px solid #60f9f900;
+    }
+    #comment-form button:hover{
+      border: 1.5px solid #60f9f9;
+      color:#60f9f9;
+      transition: 0.2s;
+      border-radius: 20px;
     }

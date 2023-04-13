@@ -15,9 +15,11 @@
       <!-- First part: function list -->
       
       <div class="function-list">
-        <img src="/img/Twitter-icon.svg">
-        <h2>Welcome <%= currentUser.username %>!</h2>
         <ul>
+          <li>
+            <img src="/img/Twitter-icon.svg">
+            <h2>Welcome <%= currentUser.username %>!</h2>
+          </li>
           <li>
             <div class="navi-item">
               <img src="/img/house-door.svg">
@@ -62,7 +64,7 @@
               <% const base64Data = post.image.toString('base64'); %>
               <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
             <% } %><br>
-            <p>Like Count: <%= post.likeCount %></p>
+            <p>Like: <%= post.likeCount %></p>
             <div class="interaction-buttons">
               <div class="like">
                 <form method="POST" action="/like/<%= post._id %>">
@@ -75,7 +77,7 @@
                 </form>
               </div>
               <div class="reply">
-                  <button onclick="showDiv()"><img src="/img/chat-square-text.svg"></button>
+                  <button><img src="/img/chat-square-text.svg"></button>
               </div>
               <div class="retweet">
                 <form method="POST" action="/retweet">
@@ -98,7 +100,7 @@
               <% } %>
             </div>
             
-            <form id="comment-form" style="display:none;" action="/comment/<%= post._id %>" method="POST">
+            <form id="comment-form" action="/comment/<%= post._id %>" method="POST">
               <input type="text" name="comment" placeholder="Add a comment">
               <button type="submit">Submit</button>
             </form>
@@ -124,7 +126,7 @@
                     <button type="submit"><img src="/img/heartbreak.svg"></button>
                   </form>
                   <div class="reply">
-                    <button onclick="showDiv()"><img src="/img/chat-square-text.svg"></button>
+                    <button><img src="/img/chat-square-text.svg"></button>
                   </div>
                   <div class="retweet">
                     <form method="POST" action="/retweet">
@@ -147,7 +149,7 @@
                   <% } %>
                 </div>
       
-                <form id="comment-form" style="display:none;" action="/comment/<%= post._id %>" method="POST">
+                <form id="comment-form" action="/comment/<%= post._id %>" method="POST">
                   <input type="text" name="comment" placeholder="Add a comment">
                   <button type="submit">Submit</button>
                 </form>
@@ -200,9 +202,4 @@
     </div>
   </div>
   </body>
-  <script>
-    function showDiv() {
-      document.getElementById('comment-form').style.display = "block";
-    }
-  </script>
 </html>

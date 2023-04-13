@@ -1,32 +1,60 @@
 <!DOCTYPE html>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Signika&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/profile.css">
 <html>
 <head>
-  <style>
-    .container {
-  display: flex;
-}
-
-.left {
-  width: 40%;
-  background-color: #ccc; /* Replace with your desired background color */
-}
-
-.right {
-  width: 60%;
-  background-color: #eee; /* Replace with your desired background color */
-}
-
-  </style>
   <title>User Profile</title>
 </head>
 <body>
 
   <div class="container">
-    <div class="left">
-      <h1>User Profile</h1>
-  <p>Welcome, <%= user.username1 %>!</p>
-  <p>Followers: <%= user.followers.length %></p>
-  <p>Following: <%= user.following.length %></p>
+    <div class="layer">
+      <div class="function-list">
+        <ul>
+          <li>
+            <img src="/img/Twitter-icon.svg">
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/house-door.svg">
+              <a href="main">Home</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/sticky.svg">
+              <a href="create">New Post</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/person-circle.svg">
+              <a href="profile">Profile</a>
+          </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/search-heart.svg">
+              <a href="ForUser">Discover</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/box-arrow-left.svg">
+              <a href="logout">Log out</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    <div class="profile">
+      <h2>User Profile</h2>
+      <div class="user-profile">
+      <p>Welcome, <%= user.username1 %>!</p>
+      <p>Followers: <%= user.followers.length %></p>
+      <p>Following: <%= user.following.length %></p>
   <!-- Display the list of followers -->
   <h2>Followers:</h2>
   <% if (user.followers.length > 0) { %>
@@ -50,30 +78,26 @@
   <% } else { %>
     <p>Not following anyone</p>
   <% } %>
-
-  
-
+  </div>
   <h2>Edit Profile</h2>
+<div class="edit-profile">
   <form id="edit-profile-form" action="/edit-profile" method="POST">
+    <div class="input-wrap">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" value="<%= user.username1 %>" required><br><br>
-
+    </div>
+    <div class="input-wrap">
     <label for="password">Password:</label>
     <input type="password" id="password" name="password"><br><br>
-
+    </div>
+    <div class="input-wrap">
     <label for="confirm-password">Confirm Password:</label>
     <input type="password" id="confirm-password" name="confirmPassword"><br><br>
-
+    </div>
     <button type="submit">Save Changes</button>
   </form>
-
-  <br><button onclick="location.href='/main'">Go Back</button>
-
-
-    </div>
-
-
-    <div class="right">
+</div>
+<div class="posts">
       <h2>Posts and Reposts</h2>
       <% for (const post of posts) { %>
         <!-- Display the original post -->
@@ -133,19 +157,19 @@
                   <p>No comments yet.</p>
                 <% } %>
               </div>
-      
+
               <form class="comment-form" action="/comment/<%= repost._id %>" method="POST">
                 <input type="text" name="comment" placeholder="Add a comment">
                 <button type="submit">Submit</button>
               </form>
-              <button form="delete-<%= repost._id %>" type="submit">Delete</button>
+              <button form="delete-<%= repost._id %>" id="delete" type="submit">Delete</button>
               <form id="delete-<%= repost._id %>" action="/delete/<%= repost._id %>" method="POST"></form>
             </div>
+
         <% } %>
-
-
-    </div>
+      </div>
+          </div>
   </div>
-  
+</div>
 </body>
 </html>
