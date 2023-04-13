@@ -35,9 +35,12 @@
         const error = urlParams.get('error');
 
         // if there is an error message, display it on the page
-        if (error) {
+        if (error == 1) {
             const errorMessage = document.getElementById('error-message');
             errorMessage.innerHTML = '<p style="color: red;">' + 'Incorrect Username/Password' + '</p>';
+        }else if(error == 2){
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Your account is blocked' + '</p>';
         }
     </script>
 
