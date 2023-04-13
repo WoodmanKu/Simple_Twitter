@@ -84,7 +84,18 @@ body {
     overflow-x: hidden;
     margin-left: 25vw;
     width: 45vw;
-    max-height: 100vh;
+    max-height: 85vh;
+}
+#post-head{
+  color:#ffffff;
+  margin-left: 25vw;
+  max-height: 8vw;
+  padding-top:1vw;
+  width: 45vw;
+  margin-top: 0;
+  padding-bottom: 1vw;
+  border-bottom: 1px solid #cdcdcd;
+  
 }
 .posts::-webkit-scrollbar {
     display: none;
