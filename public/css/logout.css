@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+    margin-top:20vh;
+    background-image: url('/img/background.jpeg'); 
+    width: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Signika', sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    text-shadow: -4px 4px 4px #000;
+    color: #FFFFFF;
+}
+
+h1 {
+    font-size: 36px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+p {
+    font-size: 24px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.login-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.login-container a {
+    color: #1DA1F2;
+    text-decoration: none;
+    text-shadow: -2px 2px 4px #000;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+a.button {
+  display: inline-block;
+  background-color: #1DA1F2;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 20px;
+  border: 2px solid #FFFFFF;
+  border-radius: 50px;
+  text-decoration: none;
+  margin-top: 30px;
+  transition: all 0.3s ease-in-out;
+}
+
+a.button:hover {
+  background-color: #0E71A3;
+  cursor: pointer;
+}
