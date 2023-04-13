@@ -1,3 +1,6 @@
+h2{
+    margin-bottom: 20px;
+}
 body {
     margin: 0;
     background-image: url('/img/background.jpeg'); 
@@ -8,4 +11,99 @@ body {
     font-size: 20px;
     font-style: normal;
     text-shadow: -4px 4px 4px #000;
+    color:#FFFFFF;
+}
+.signup-divider{
+    margin-left: 5vw;
+    margin-right: 5vw;
+    gap:10vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.word-design {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#word{
+    height: 450px;
+}
+#icon{
+    height: 180px;
+}
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.signup-container a{
+    display: flex;
+    color: #FFFFFF;
+}
+.signup-form {
+    background-color: #ffffff03;
+    max-height:500px;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 2px solid #FFFFFF;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: -4px 4px 4px #000;
+}
+.signup-form form{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width:60%;
+    display: flex;
+    flex-direction: column;
+    font-size: 15px;
+    font-weight: 500;
+}
+.signup-form form label{
+    margin-top: 10px;
+}
+.login-container a{
+    display: flex;
+    justify-content: center;
+}
+.login-container p{
+    font-size: 15px;
+    font-weight: 400;
+}
+.login-container a:hover{
+    font-size: 18px;
+    transition: 0.5s;
+}
+input[type="submit"]{
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width:70%;
+    cursor: pointer;
+}
+input[type="submit"]:hover{
+    background-color: #0000004a;
+    color: rgb(142, 142, 142);
+    width:60%;
+    text-shadow: 0px 0px 0px #000;
+    transition: 0.25s;
+
+}
+form input {
+    background-color: transparent;
+    color: white;
+    font-weight: 700;
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 15px;
+    border: 2px solid #ffffff;
+    box-shadow: -4px 4px 4px #000;
+    text-shadow: -4px 4px 4px #000;
+    border-radius: 30px;
 }

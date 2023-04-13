@@ -18,9 +18,24 @@
         <img src="/img/Twitter-icon.svg">
         <h2>Welcome <%= currentUser.username %>!</h2>
         <ul>
-          <li><a href="create">new Post</a></li>
-          <li><a href="profile">Profile</a></li>
-          <li><a href="logout">Log out</a></li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/sticky.svg">
+              <a href="create">New Post</a>
+            </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/person-circle.svg">
+              <a href="profile">Profile</a>
+          </div>
+          </li>
+          <li>
+            <div class="navi-item">
+              <img src="/img/box-arrow-left.svg">
+              <a href="logout">Log out</a>
+            </div>
+          </li>
         </ul>
       </div>
 
@@ -29,8 +44,8 @@
         <% for (const post of posts) { %>
           <div class="post">
             <h3><%= post.title %></h3>
-            <p><%= post.username %></p>
-            <p><%= post.content %></p>
+            <p>@<%= post.username %></p>
+            <p><%= post.body %></p>
             <% if (post.image) { %>
               <% const base64Data = post.image.toString('base64'); %>
               <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
@@ -77,8 +92,53 @@
               <input type="hidden" name="postId" value="<%= post._id %>">
               <button type="submit">Retweet</button>
             </form>
+          </div>
+      
+          <!-- Display the reposted posts -->
+          <% for (const repost of freposts) { %>
+
+              <div class="post frerepost">
+                <h3><%= repost.title %></h3>
+                <p>Reposted by <%= repost.author %> ,@<%= post.username %></p>
+                <p><%= repost.body %></p>
+                <% if (repost.image) { %>
+                  <% const base64Data = repost.image.toString('base64'); %>
+                  <img src="data:image/png;base64,<%= base64Data %>" alt="Repost image">
+                <% } %>
+                <p>Like Count: <%= repost.likeCount %></p>
+                <div class="interaction-buttons">
+                  <form method="POST" action="/like/<%= repost._id %>">
+                    <button type="submit">Like</button>
+                  </form>
+                  <form method="POST" action="/dislike/<%= repost._id %>">
+                    <button type="submit">Dislike</button>
+                  </form>
+                </div>
+      
+                <div class="comments">
+                  <h4>Comments:</h4>
+                  <% if (repost.comments && repost.comments.length > 0) { %>
+                    <% for (const comment of repost.comments) { %>
+                      <div class="comment">
+                        <p><%= comment.username %>: <%= comment.content %></p>
+                      </div>
+                    <% } %>
+                  <% } else { %>
+                    <p>No comments yet.</p>
+                  <% } %>
+                </div>
+      
+                <form class="comment-form" action="/comment/<%= repost._id %>" method="POST">
+                  <input type="text" name="comment" placeholder="Add a comment">
+                  <button type="submit">Submit</button>
+                </form>
+      
+                <form method="POST" action="/retweet">
+                  <input type="hidden" name="postId" value="<%= repost._id %>">
+                  <button type="submit">Retweet</button>
           </form>
           </div>
+          <% } %>
         <% } %>
       </div>
       
@@ -87,9 +147,11 @@
 
 <!-- Third part: search users -->
 <div class="search-users">
-  <form method="GET" action="/main">
-    <input type="text" placeholder="Search..." name="q">
-    <button type="submit">Go</button>
+  <form method="GET" action="/main" id="search-bar">
+    <div>
+      <input type="text" placeholder="Search..." name="q">
+      <button type="submit">Go</button>
+    </div>
   </form>
   <% if (users && users.length > 0) { %>
     <h3>Search Results:</h3>

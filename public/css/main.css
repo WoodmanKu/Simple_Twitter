@@ -2,13 +2,19 @@ span{
     font-size: 16px;
 }
 h2{
-    color:#a0a0a0;
+    color:#cdcdcd;
+}
+h3{
+  color:#e0e0e0;
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 15px;
 }
 h4{
     font-size: 12px;
 }
 p{
-    font-size: 9px;
+    font-size: 11px;
 }
 body {
     margin: 0;
@@ -20,11 +26,11 @@ body {
     font-family: 'Signika', sans-serif;
     font-size: 20px;
     font-style: normal;
-    text-shadow: -4px 4px 4px #000;
-    color: #a0a0a0;
+    
+    color: #cdcdcd;
 }
 .layer{
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     position: absolute;
     top: 0;
     left: 0;
@@ -35,6 +41,7 @@ body {
       /* First part styles */
       .function-list {
         margin-top: 30px;
+        height: 95vh;
         width:20vw;
         position: fixed;
         margin-left: 2vw;        
@@ -42,11 +49,33 @@ body {
         color: white;
         font-size: 20px;
         background-color: transparent;
+        border-right: 1px solid #a0a0a0;
       }
       .function-list li{
         margin-bottom: 30px;
         list-style-type: none;
         padding-left:0px;
+      }
+      .function-list li a{
+        text-decoration: none;
+        all:unset;
+        cursor: pointer;
+        
+      }
+      .navi-item{
+        width: fit-content;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 10px;
+        color:#cdcdcd;
+        display: flex;
+        gap:8px;
+        align-items: center;
+      }
+      .navi-item:hover{
+        background-color:#00000050;
+        transition: 0.5s;
       }
       /* Second part styles */
 /* User Posts section */
@@ -54,7 +83,7 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
     margin-left: 25vw;
-    width: 40vw;
+    width: 45vw;
     max-height: 100vh;
 }
 .posts::-webkit-scrollbar {
@@ -87,7 +116,10 @@ body {
     background-color: #00000074;
     transition: 0.15s;
 }
-
+.interaction-buttons button:active{
+  background-color: #ff000074;
+  transition: 0.15s;
+}
 .interaction-buttons img{
     position:absolute;
     top :50%;
@@ -103,11 +135,14 @@ body {
 
       /* Third part styles */
       .search-users {
+        border-left: 1px solid #a0a0a0;
+        height:95vh;
+        margin-top: 30px;
         position: fixed;
         text-align: right;
         right:2vw;
         top:0;
-        width:500px;
+        width:25vw;
         display: inline-block;
         margin-bottom: 20px;
         color: #a0a0a0;
@@ -115,22 +150,28 @@ body {
         background-color: transparent;
       }
 
-      .search-users form{
-        margin-top: 30px;
-        width:50%;
+      #search-bar{
+        width:250px;
         display: flex;
         margin-left: auto;
         padding:10px;
         border:1px solid #a0a0a0;
         border-radius: 20px;
       }
-      .search-users form input{
-        width:50%;
+      #search-bar div{
+        width:100%;
+        margin-right: 10px;
+      }
+      #search-bar input{
         all:unset;
         text-align: center;
       }
+      #search-bar input::placeholder{
+        font-size: 15px;
+      }
       .search-users form button{
         all:unset;
+        font-size: 15px;
         cursor: pointer;
       }
       .search-users li{
