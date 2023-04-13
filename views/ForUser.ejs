@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For User</title>
+  <style>
+    img {
+  max-width: 400px;
+  max-height: 400px;
+}
+  </style>
+</head>
+<body>
+  <h1>Top 10 Most Liked Posts</h1>
+  <% if (posts.length === 0) { %>
+    <p>No posts found.</p>
+  <% } else { %>
+    <ul>
+      <% for (let i = 0; i < posts.length; i++) { %>
+        <li>
+          <h2><%= posts[i].title %></h2>
+          <% if (posts[i].image) { %>
+            <% const base64Data = posts[i].image.toString('base64'); %>
+            <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
+          <% } %>
+          <p><%= posts[i].body %></p>
+          <p>Likes: <%= posts[i].likeCount %></p>
+          
+          <div class="comments">
+            <h4>Comments:</h4>
+            <% if (posts[i].comments && posts[i].comments.length > 0) { %>
+              <% for (const comment of posts[i].comments) { %>
+                <div class="comment">
+                  <p><%= comment.username %>: <%= comment.content %></p>
+                </div>
+              <% } %>
+            <% } else { %>
+              <p>No comments yet.</p>
+            <% } %>
+          </div>
+        
+        </li>
+      <% } %>
+    </ul>
+  <% } %>
+</body>
+</html>

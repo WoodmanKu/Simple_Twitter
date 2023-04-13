@@ -189,12 +189,59 @@ app.get('/admin', async (req, res) => {
   }
 });
 
-app.get('/profile', (req, res) => {
-  if (!req.session.user) { // Check if the user is not logged in
-    res.redirect('/login'); // Redirect to the login page if the user is not logged in
+app.get('/profile', async (req, res) => {
+  if (!req.session.user) {
+    res.redirect('/login');
     return;
   }
-  res.render('profile', { user: req.session.user }); // Pass the user object to the profile template
+
+  try {
+    const db = client.db('Test');
+    const userCollection = db.collection('User');
+    const postCollection = db.collection('Post');
+    const user = await userCollection.findOne({ username: req.session.user.username });
+    
+    const postQuery = [
+      {
+        $match: {
+          username: { $in: [user.username] }
+        }
+      },
+      {
+        $lookup: {
+          from: 'Comments',
+          localField: '_id',
+          foreignField: 'postId',
+          as: 'comments'
+        }
+      },
+      {
+        $sort: { createdAt: -1 }
+      }
+    ];
+    
+    const posts = await postCollection.aggregate(postQuery).toArray();
+
+
+    const repostedPostIds = user.repost || [];
+    const repostedPostQuery = { _id: { $in: repostedPostIds } };
+    const repostPosts = await postCollection.find(repostedPostQuery).toArray();
+    const originalPostIds = repostPosts.map(post => post.originalPostId);
+    const postIds = Array.from(new Set(originalPostIds));
+    const repostQuery = {
+      _id: { $in: postIds.map(postId => new ObjectId(postId)) }
+    };
+    const reposts = await postCollection.find(repostQuery).toArray();
+    
+    
+    console.log(user)
+    //console.log(reposts)
+    //console.log(posts)
+    res.render('profile', { user,reposts,posts});
+  } catch (err) {
+    console.error(err);
+    res.redirect('/profile');
+  }
 });
 
 app.get('/create', (req, res) => {
@@ -205,25 +252,53 @@ app.get('/create', (req, res) => {
   res.sendFile(__dirname + '/page/create.html');
 });
 
+app.get('/ForUser', async (req, res) => {
+  const db = client.db('Test');
+  const postCollection = db.collection('Post');
+  const postQuery = [
+    {
+      $lookup: {
+        from: 'Comments',
+        localField: '_id',
+        foreignField: 'postId',
+        as: 'comments'
+      }
+    },
+    {
+      $sort: { likeCount: -1 }
+    },
+    {
+      $limit: 10
+    }
+  ];
+  const posts = await postCollection.aggregate(postQuery).toArray();
+  res.render('ForUser', { posts });
+});
+
 app.post('/signup',
   body('username').notEmpty().withMessage('Username is required'),
   body('password').notEmpty().withMessage('Password is required'),
+  body('cpassword').notEmpty().withMessage('comfirm-password is required'),
   async (req, res) => {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-
+      const { username, password, cpassword } = req.body;
+      if(password !== cpassword){
+        return res.redirect('/signup?error=2');
+      }
       const db = client.db('Test');
       const collection = db.collection('User');
-      const { username, password } = req.body;
+
       const existingUser = await collection.findOne({ username });
       if (existingUser) {
         return res.redirect('/signup?error=1');
       }
       const user = {
         username,
+        username1: username,
         password,
         isAdmin: false,
         status: true,
@@ -233,7 +308,7 @@ app.post('/signup',
         repost: []
       };
       const result = await collection.insertOne(user);
-      console.log(result);
+
       res.redirect('/signup_s');
     } catch (err) {
       console.log("Error:", err.stack);
@@ -250,7 +325,8 @@ app.post('/login', async (req, res) => {
     if (user) {
       req.session.user = { // Create the req.session.user object to store the logged-in user's data
         username: user.username,
-        isAdmin: user.isAdmin
+        isAdmin: user.isAdmin,
+        isActive: user.status
       };
       console.log('Logged in successfully:', req.session.user); // Log the value of req.session.user
       if (user.isAdmin) {
@@ -309,11 +385,11 @@ app.post('/create', upload.single('photo'),
       }
 
       const result = await postCollection.insertOne(post);
-      console.log(result);
+      //console.log(result);
 
       const postId = result.insertedId;
-      console.log(currentUser._id )
-      console.log(postId)
+      //console.log(currentUser._id )
+      //console.log(postId)
 
       await userCollection.updateOne(
         { username: currentUser.username },
@@ -354,33 +430,6 @@ app.put('/users/:username', async (req, res) => {
     console.log(error)
     res.status(500).send(error);
   }
-});
-
-app.post('/edit-profile', function(req, res) {
-  // Check if the new password and confirm password match
-  if (req.body.password !== req.body.confirmPassword) {
-    return res.status(400).send('Passwords do not match');
-  }
-
-  // Update the user's profile with the new name and password
-  User.findById(req.user._id, function(err, user) {
-    if (err) {
-      console.error('Error updating user profile:', err);
-      return res.status(500).send('Error updating user profile');
-    }
-
-    user.name = req.body.name;
-    user.password = req.body.password;
-
-    user.save(function(err) {
-      if (err) {
-        console.error('Error updating user profile:', err);
-        return res.status(500).send('Error updating user profile');
-      }
-
-      res.redirect('/profile');
-    });
-  });
 });
 
 app.post('/like/:postId', async (req, res) => {
@@ -522,6 +571,43 @@ app.get('/search', async (req, res) => {
   }
 });
 
+app.post('/edit-profile', async (req, res) => {
+  try {
+    const db = client.db('Test');
+    const userCollection = db.collection('User');
+    const { name, password, confirmPassword } = req.body;
+    const user = await db.collection('User').findOne({ username: req.session.user.username });
+
+    // Check if new name is different from current name and update it
+    if (name !== user.username1) {
+      user.username1 = name;
+      await db.collection('User').updateOne({ username: req.session.user.username }, { $set: { username1: name } });
+     }
+
+    // Check if new password is different from current password
+    if (password && password !== '') {
+      // Check if confirm password matches new password
+      if (password !== confirmPassword) {
+        req.flash('error', 'Confirm password does not match');
+        return res.redirect('/edit-profile');
+      }
+
+      // Save old password as previousPassword and update user password
+      const oldPassword = user.password;
+      user.previousPassword = oldPassword;
+      user.password = password;
+      await db.collection('User').updateOne({ username: req.session.user.username }, { $set: { previousPassword: oldPassword, password: password } });
+    }
+
+    console.log("success")
+    res.redirect('/profile');
+  } catch (err) {
+    console.error(err);
+    console.log("fail")
+    res.redirect('/edit-profile');
+  }
+});
+
 app.post('/retweet', async (req, res) => {
   try {
     if (!req.session.user) {
@@ -535,8 +621,8 @@ app.post('/retweet', async (req, res) => {
     const currentUsername = req.session.user.username;
     const postId = req.body.postId;
 
-    console.log(req.body)
-    console.log(postId)
+    //console.log(req.body)
+    //console.log(postId)
 
     // Find the original post being retweeted
     const originalPost = await postCollection.findOne({ _id: new ObjectId(postId) });
@@ -594,6 +680,21 @@ app.post('/follow', async (req, res) => {
   } catch (err) {
     console.error('Error following user:', err);
     res.status(500).send(err.message);
+  }
+});
+
+app.post('/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+    await post.remove();
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
   }
 });
 
