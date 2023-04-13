@@ -8,14 +8,54 @@
   <title>For User</title>
 </head>
 <body>
+  <div class="layer">
+  <div class="main-page">
+    <!-- First part: function list -->
+    
+    <div class="function-list">
+      <img src="/img/Twitter-icon.svg">
+      <ul>
+        <li>
+          <div class="navi-item">
+            <img src="/img/house-door.svg">
+            <a href="main">Home</a>
+          </div>
+        </li>
+        <li>
+          <div class="navi-item">
+            <img src="/img/sticky.svg">
+            <a href="create">New Post</a>
+          </div>
+        </li>
+        <li>
+          <div class="navi-item">
+            <img src="/img/person-circle.svg">
+            <a href="profile">Profile</a>
+        </div>
+        </li>
+        <li>
+          <div class="navi-item">
+            <img src="/img/search-heart.svg">
+            <a href="ForUser">Discover</a>
+          </div>
+        </li>
+        <li>
+          <div class="navi-item">
+            <img src="/img/box-arrow-left.svg">
+            <a href="logout">Log out</a>
+          </div>
+        </li>
+      </ul>
+    </div>
   <div class="discover-container">
   <h1>Top 10 Most Liked Posts</h1>
-
+  <div class="posts">
   <% if (posts.length === 0) { %>
     <p>No posts found.</p>
   <% } else { %>
     <ul>
       <% for (let i = 0; i < posts.length; i++) { %>
+        <div class="post">
         <li>
           <h2><%= posts[i].title %></h2>
           <% if (posts[i].image) { %>
@@ -23,8 +63,9 @@
             <img src="data:image/png;base64,<%= base64Data %>" alt="Post image">
           <% } %>
           <p><%= posts[i].body %></p>
-          <p>Likes: <%= posts[i].likeCount %></p>
-          
+          <div class="like-wrapper">
+          <p id="like"><img src="/img/heart.svg"><%= posts[i].likeCount %></p>
+          </div>
           <div class="comments">
             <h4>Comments:</h4>
             <% if (posts[i].comments && posts[i].comments.length > 0) { %>
@@ -37,11 +78,14 @@
               <p>No comments yet.</p>
             <% } %>
           </div>
+          </div>
         
         </li>
       <% } %>
     </ul>
   <% } %>
+</div>
+</div>
 </div>
 </body>
 </html>

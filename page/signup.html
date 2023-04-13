@@ -14,16 +14,36 @@
         <img id="word" src='/img/Slogan.svg' alt="word">
       </div>
       <div class="signup-container">
-      <div class="signup-form">
-        <h2>Create Your Account</h>
-      <form>
+      <form class="signup-form" action="/signup" method="POST">
+        <h2>Create Your Account !</h2>
+        
         <label for="username">Username:</label>
         <input type="text" id="username" name="username">
+
         <label for="password">Password:</label>
         <input type="password" id="password" name="password">
+
         <label for="r_password">Re-enter Password:</label>
         <input type="password" id="cpassword" name="cpassword">
-        <input type="submit" value="Sign Up">
+
+        <div class="error-message"></div>
+        <button type="submit" value="signup">Sign up</button>
+
+        <script>
+          // check if there is an error message in the URL
+          const urlParams = new URLSearchParams(window.location.search);
+          const error = urlParams.get('error');
+    
+          // if there is an error message, display it on the page
+          if (error == 1) {
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Username already exists!' + '</p>';
+          } else if (error == 2) {
+            const errorMessage = document.querySelector('.error-message');
+            errorMessage.innerHTML = '<p style="color: red;">' + 'Passwords do not match!' + '</p>';
+          }
+        </script>
+
       </form>
       <div class="login-container">
         <p>Already have an account? <a href="login">Log in</a></p>
@@ -31,21 +51,6 @@
     </div>
     </div>
     </div>
-    <script>
-       // check if there is an error message in the URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const error = urlParams.get('error');
 
-            // if there is an error message, display it on the page
-            if (error == 1) {
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.innerHTML = '<p style="color: red;">' + 'Username already exists!' + '</p>';
-            }else if (error == 2){
-                const errorMessage = document.getElementById('error-message');
-                errorMessage.innerHTML = '<p style="color: red;">' + 'Password dont match!' + '</p>';
-            }
-
-    </script>
-    <div class="error-message"></div>
   </body>
 </html>

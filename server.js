@@ -13,7 +13,7 @@ const { Binary } = require('mongodb');
 //openai support for rating chat
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -282,28 +282,6 @@ app.get('/ForUser', async (req, res) => {
         localField: '_id',
         foreignField: 'postId',
         as: 'comments'
-      }
-    },
-    {
-      $addFields: {
-        sentimentRating: {
-          $toInt: {
-            $substr: [
-              {
-                $regexFind: {
-                  input: {
-                    $text: {
-                      $search: "Rate the sentiment in this tweet from 1 to 10"
-                    }
-                  },
-                  regex: /(?<=Rate the sentiment in this tweet from 1 to 10 where 1 for very negative\(Hate speech, Harrassment, Violence\),10 for very positive\(Inspirational, Motivational, Educational, Positive new and stories, Community-building\):\n\n)[\d]+/
-                }
-              },
-              0,
-              -1
-            ]
-          }
-        }
       }
     },
     {

@@ -90,9 +90,12 @@ body {
     display: none;
   }
 
-.post{
-    border-bottom: 1px solid #a0a0a0;
-    padding: 20px;
+  .post{
+    border-radius: 20px;
+    padding:20px;
+    margin: 20px;
+    background-color: rgb(0, 0, 0,0.5);
+    list-style-type: none;
 }
 
 /* Like and Dislike buttons */
