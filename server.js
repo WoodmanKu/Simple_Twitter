@@ -10,6 +10,26 @@ const upload = multer({ dest: 'uploads/' });
 fs = require('fs');
 const { Binary } = require('mongodb');
 
+//openai support for rating chat
+const { Configuration, OpenAIApi } = require("openai");
+const configuration = new Configuration({
+  apiKey: "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",
+});
+const openai = new OpenAIApi(configuration);
+
+async function generateCompletion(prompt) {
+  const response = await openai.createCompletion({
+    model: "text-davinci-003",
+    prompt: prompt,
+    temperature: 0,
+    max_tokens: 2048,
+    top_p: 1.0,
+    frequency_penalty: 0.0,
+    presence_penalty: 0.0,
+  });
+
+  return response.data.choices[0].text;
+}
 
 const app = express();
 const port = 3000;
@@ -136,7 +156,7 @@ app.get('/main', async (req, res) => {
       }
     }
     
-    console.log(freposts);
+    // console.log(freposts);
 
 
     
@@ -265,7 +285,32 @@ app.get('/ForUser', async (req, res) => {
       }
     },
     {
-      $sort: { likeCount: -1 }
+      $addFields: {
+        sentimentRating: {
+          $toInt: {
+            $substr: [
+              {
+                $regexFind: {
+                  input: {
+                    $text: {
+                      $search: "Rate the sentiment in this tweet from 1 to 10"
+                    }
+                  },
+                  regex: /(?<=Rate the sentiment in this tweet from 1 to 10 where 1 for very negative\(Hate speech, Harrassment, Violence\),10 for very positive\(Inspirational, Motivational, Educational, Positive new and stories, Community-building\):\n\n)[\d]+/
+                }
+              },
+              0,
+              -1
+            ]
+          }
+        }
+      }
+    },
+    {
+      $sort: {
+        likeCount: -1,
+        sentimentRating: -1
+      }
     },
     {
       $limit: 10
@@ -329,12 +374,17 @@ app.post('/login', async (req, res) => {
         isActive: user.status
       };
       console.log('Logged in successfully:', req.session.user); // Log the value of req.session.user
-      if (user.isAdmin) {
+      console.log(req.session.user.isActive)
+      console.log(req.session.user.isAdmin)
+
+      if (req.session.user.isAdmin) {
         res.redirect('/admin');
-      } else {
+      } else if(req.session.user.isActive){
         res.redirect('/main');
-      }
-    } else {
+      }else if(!req.session.user.isActive){
+        res.redirect('/login?error=2');
+      } 
+    }else {
       res.redirect('/login?error=1');
     }
   } catch (err) {
@@ -366,9 +416,15 @@ app.post('/create', upload.single('photo'),
         return res.status(401).json({ error: 'User not found' });
       }
 
+      const prompt = `Rate the sentiment in this tweet from 1 to 10 where 1 for very negative(Hate speech, Harrassment, Violence),10 for very positive(Inspirational, Motivational, Educational, Positive new and stories, Community-building),notice you should return 1 integer only:\n\n1. "${body}"\n`;
+
+      const sentiment = await generateCompletion(prompt);
+      console.log('Sentiment rating: ', sentiment);
+
       const post = {
         title,
         body,
+        sentiment,
         createdAt: new Date(),
         likecount: 0,
         userLike: 0,
