@@ -13,7 +13,7 @@ const { Binary } = require('mongodb');
 //openai support for rating chat
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: "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",
+  apiKey: "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",
 });
 const openai = new OpenAIApi(configuration);
 
@@ -727,7 +727,7 @@ app.post('/delete/:id', async (req, res) => {
       return res.status(404).send('Post not found');
     }
     await postCollection.deleteOne({ _id: new ObjectId(id) });
-    res.redirect('/');
+    res.redirect('/profile');
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Server error');
